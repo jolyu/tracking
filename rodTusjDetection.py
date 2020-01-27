@@ -6,8 +6,8 @@ redUpper = (80,255,255)                                                         
 def redProsessFrame(frame):
     frame = cv2.resize(frame, (650,500))                        #reskalerer for vindu, fungerer ikke som planlagt (endre pixler)
     
-    blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-    frame = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+    #blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+    #frame = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(frame, redLower, redUpper)               #har ingen anelse hvordan mask opplegget fungerer, men det må til for å filterer bort alt fra bildet
     mask = cv2.erode(mask, None, iterations=0)                  #som ikke er rødt

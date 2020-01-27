@@ -4,8 +4,8 @@ import rodTusjDetection as rtd
 import numpy as np
 
 def makePoint(bbox):
-    p1 = (int(bbox[0]) + int(bbox[1]))*0.5
-    p2 = (int(bbox[2]) + int(bbox[3]))*0.5
+    p1 = bbox[0] + int(bbox[2]/2)
+    p2 = bbox[1] + int(bbox[3]/2)
     return [p1,p2]
 
 
@@ -22,7 +22,9 @@ frame = np.stack((frame,)*3, axis=-1)
 bbox = (287, 23, 86, 320)
 # Uncomment the line below to select a different bounding box
 bbox = cv2.selectROI(frame, False)
-track.append(track, makePoint(bbox))
+newPoint = makePoint(bbox)
+track.append(newPoint)
+
 # Initialize tracker with first frame and bounding box
 ok = tracker.init(frame, bbox)
 
@@ -40,19 +42,23 @@ while(True):
  
     # Update tracker
     ok, bbox = tracker.update(frame)
-    track.append(makePoint(bbox))
+    newPoint = makePoint(bbox)
+    track.append(newPoint)
 
-    if(len(track) > 100):
-       track.delete(track, [100])
+    if(len(track) > 10):
+       track.pop(0)
     # Draw bounding box
+    print(len(track))
     if ok:
     # Tracking success
         p1 = (int(bbox[0]), int(bbox[1]))
         p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
         cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
-
+    
         for i in range(0, len(track)-1):
-            #cv2.line(frame, track[i], track[i+1], (0,0,255), 10)
+            p1 = (int(track[i][0]), int(track[i][1]))
+            p2 = (int(track[i+1][0]), int(track[i+1][1]))
+            cv2.line(frame, p1, p2, (0,0,255), i+1)
             
     else :
         # Tracking failure
