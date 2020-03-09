@@ -4,7 +4,6 @@ import cv2
 
 trackerType = "KCF"
 multiTracker = cv2.MultiTracker_create()
-
 bboxes = []
 
 cap = cv2.VideoCapture('vtest.avi')
