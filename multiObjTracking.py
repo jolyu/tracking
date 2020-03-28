@@ -1,7 +1,7 @@
 import blobDetect as bd
 import trackerFunc as tf
 import cv2 as cv
-import NewTracker as nt
+#import NewTracker as nt
 
 class NewTracker(cv.MultiTracker):
     def _init_(self):
