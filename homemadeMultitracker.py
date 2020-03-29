@@ -6,28 +6,32 @@ import cv2 as cv
 class NewTracker():                     #constructor
     def __init__(self):
         self.trackers = []              #makes a list that should contain all trackers
+        self.trackerFail = []           #list to see how many frames a tracker has been nonvalid
 
     def add(self, trackerObj):          #method for adding trackers
-        self.trackers.append(trackerObj) 
+        self.trackers.append(trackerObj)
+        self.trackerFail.append(0)
 
     def pop(self, ind):                 #method for removing tracker
         if ind > len(self.trackers) or ind <0: 
             pass
         else:
             self.trackers.pop(ind)
+            self.trackerFail.pop(ind)
             
     def update(self, frame):            #method to update multitracker
         boxes = []
-        notValid = []
         for idx, el in enumerate(self.trackers):
             retval, box = el.update(frame)
             if retval == True:          #checks if tracker managed to track
                 boxes.append(box)       #continues to track if valid
+                self.trackerFail[idx] = 0
             else:
-                notValid.append(idx)    #nonvalid tracker are added to the list
-        if len(notValid) > 0:              
-            for num in notValid:
-                self.pop(num)           #all nonvalid trackers are removed
+                self.trackerFail[idx] +=1
+                print('tracker failed')
+        for idx, fails in enumerate(self.trackerFail):
+            if fails > 5:
+                self.pop(idx)
         return boxes
         
 
@@ -38,7 +42,7 @@ bboxes = []
 cap = cv.VideoCapture('vtest.avi')
 
 while(cap.isOpened()):
-    #print(len(multiTracker.trackers))
+    print(len(multiTracker.trackers))
     ret, frame = cap.read()                                     #read frames
     boxes = multiTracker.update(frame)
     if cv.waitKey(0) == ord('s'):
