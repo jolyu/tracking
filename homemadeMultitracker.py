@@ -10,14 +10,14 @@ class NewTracker():                     #constructor
 
     def add(self, trackerObj):          #method for adding trackers
         self.trackers.append(trackerObj)
-        self.trackerFail.append(0)
+        self.trackerFail.append(0)      #also needs to see how many frames it has been nonvalid
 
     def pop(self, ind):                 #method for removing tracker
         if ind > len(self.trackers) or ind <0: 
             pass
         else:
-            self.trackers.pop(ind)
-            self.trackerFail.pop(ind)
+            self.trackers.pop(ind)      #remove tracker and
+            self.trackerFail.pop(ind)   #everything related to it
             
     def update(self, frame):            #method to update multitracker
         boxes = []
@@ -25,14 +25,13 @@ class NewTracker():                     #constructor
             retval, box = el.update(frame)
             if retval == True:          #checks if tracker managed to track
                 boxes.append(box)       #continues to track if valid
-                self.trackerFail[idx] = 0
+                self.trackerFail[idx] = 0   #if track was sucsessful trackerFail is zero
             else:
                 self.trackerFail[idx] +=1
-                print('tracker failed')
-        for idx, fails in enumerate(self.trackerFail):
-            if fails > 5:
-                self.pop(idx)
-        return boxes
+        for idx, fails in enumerate(self.trackerFail):  
+            if fails > 5:               #needs to iterate throug list of tracker
+                self.pop(idx)           #to see how long they have been wrong
+        return boxes                    #list of boxes so they can be drawn on the frame
         
 
 trackerType = "KCF"                 #choosing trackertype
