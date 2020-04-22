@@ -5,12 +5,13 @@ def KeypointsToBoxes(keypoints):
     for keypoint in keypoints:
         point = keypoint.pt
         size = int(keypoint.size)
-        box = (int(point[0])- (size/2),int(point[1]) - (size/2),size,size)
+        box = (int(point[0])- (size),int(point[1]) - (size),2.75*size,2.75*size)
         boxes.append(box)
     return boxes
 
 def removeTrackedBlobs(keypoints, boxes):
     newKeypoints = []
+    oldKeypoints = []
     #print(keypoints)
     diff = []
     try:
@@ -24,9 +25,11 @@ def removeTrackedBlobs(keypoints, boxes):
         for point in keypoints:
             if point not in diff:
                 newKeypoints.append(point)
+            else:
+                oldKeypoints.append(point)
     except:
         pass
-    return newKeypoints
+    return newKeypoints, oldKeypoints
 
 if __name__ == "__main__":
     pass
