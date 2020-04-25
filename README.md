@@ -45,7 +45,7 @@ Returns nothing.
 
 Update all trackers, and remove the ones that has been nonvalid for 5 frames in a row:
 ```pyton
-NewTracker.update(frame)
+NewTracker.update(filteredFrame)
 ```
 returns list of boxes around all tracked objects
 
